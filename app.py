@@ -85,47 +85,52 @@ gr.close_all()
                 INDI Global Voice Mapping Objects
 ALL_VOICES_MAP = {}
 INDIAN_VOICES = {}
-MULTILINGAN_VOICES[display_name] = short_name
-            elif "multilingual" in short_name.lower():UAL_VOICES = {}
-OTHER_VOICES = {}
-
-async def load_and_categorize_voices
-                MULTILINGUAL_VOICES[display_name] = short_name
-            else:
-                OTHER_VO():
+async def load_and_categorize_voices():
     global ALL_VOICES_MAP, INDIAN_VOICES, MULTILINGUAL_VOICES, OTHER_VOICES
     try:
         voices = await edge_tts.list_voices()
         ALL_VOICES_MAP.clear()
         INDIAN_VOICES.clear()
-        MULTILINGUAL_VOICES[display_name] = short_name
-                
-        # Sort collections
-        INDIAN_VOICES = dict(sorted(INDIAN_VOICES.items()))
-        MULTILINGUAL_VOICES = dict(sorted(ICES.clear()
+        MULTILINGUAL_VOICES.clear()
         OTHER_VOICES.clear()
 
         for v in voices:
             locale = v['Locale']
-            shortMULTILINGUAL_VOICES.items()))
-        OTHER_VOICES = dict(sorted(OTHER_VOICES.items()))
-
-        print(f"Loaded: {len(INDIAN_VOICES)} Indian, {len(_name = v['ShortName']
+            short_name = v['ShortName']
             gender = v['Gender']
-            display_name = f"{locale} | {short_nameMULTILINGUAL_VOICES)} Multilingual, {len(OTHER_VOICES)} Other voices.")
-    except Exception as e:} ({gender})"
+            display_name = f"{locale} | {short_name} ({gender})"
             
             ALL_VOICES_MAP[display_name] = short_name
             
-            is_
-        print(f"Error loading voices at startup: {str(e)}")
-
-# Safe Text cleaner (Igindian = (
+            # Strict Indian Locales Matching Block
+            is_indian = (
                 locale.endswith("-IN") or 
                 locale.startswith("hi-") or 
                 locale.startswith("bn-") or 
                 locale.startswith("ta-") or 
-                nores Brackets content and minus symbols)
+                locale.startswith("te-") or 
+                locale.startswith("mr-") or 
+                locale.startswith("gu-") or 
+                locale.startswith("kn-") or 
+                locale.startswith("ml-") or 
+                locale.startswith("ur-")
+            )
+            
+            if is_indian:
+                INDIAN_VOICES[display_name] = short_name
+            elif "multilingual" in short_name.lower():
+                MULTILINGUAL_VOICES[display_name] = short_name
+            else:
+                OTHER_VOICES[display_name] = short_name
+                
+        # Sort collections
+        INDIAN_VOICES = dict(sorted(INDIAN_VOICES.items()))
+        MULTILINGUAL_VOICES = dict(sorted(MULTILINGUAL_VOICES.items()))
+        OTHER_VOICES = dict(sorted(OTHER_VOICES.items()))
+
+        print(f"Loaded: {len(INDIAN_VOICES)} Indian, {len(MULTILINGUAL_VOICES)} Multilingual, {len(OTHER_VOICES)} Other voices.")
+    except Exception as e:
+        print(f"Error loading voices at startup: {str(e)}")
 def clean_text_for_tts(text):
     if not text:
         return ""
