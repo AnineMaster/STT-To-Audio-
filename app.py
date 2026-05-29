@@ -24,17 +24,17 @@ def export_processed_audio(audio_segment, file_name, audio_format, bitrate, samp
     try:
         if audio_segment is None or len(audio_segment) == 0:
             return None
-        
+
         # Enforce 16-Bit Depth (CD Studio Mastering Standard)
         audio_segment = audio_segment.set_sample_width(2)
-        
+
         target_hz = int(sample_rate.replace("Hz", ""))
         audio_segment = audio_segment.set_frame_rate(target_hz)
-        
+
         export_kwargs = {}
         if audio_format in ["mp3", "m4a", "ogg"]:
             export_kwargs["bitrate"] = bitrate
-            
+
         output_file = f"{file_name}.{audio_format}"
         audio_segment.export(output_file, format=audio_format, **export_kwargs)
         return output_file
@@ -90,7 +90,7 @@ async def process_edge_srt(srt_text, voice, audio_format, bitrate, sample_rate):
 
     total_chars = sum(len(d['text']) for d in parsed_data)
     estimated_compile_time_s = round((total_segments * 0.30) + (total_chars * 0.001), 1)
-    
+
     est_msg = f"🔄 AI Estimate: Total Segments: {total_segments} | Estimated Process Time: ~{estimated_compile_time_s}s. Starting..."
     yield None, None, est_msg, None
     await asyncio.sleep(0.8)
@@ -124,7 +124,7 @@ async def process_edge_srt(srt_text, voice, audio_format, bitrate, sample_rate):
             gen_times.append(round(time.time() - start_seg_time, 3))
 
     final_file = export_processed_audio(combined_audio, "final_srt_audio", audio_format, bitrate, sample_rate)
-    
+
     total_timeline_sec = round(len(combined_audio) / 1000.0, 2)
     spoken_only_sec = round(actual_spoken_ms / 1000.0, 2)
     end_process_time = time.time()
@@ -190,11 +190,11 @@ async def start_app():
                 log_srt_grid = gr.Dataframe(label="Google Sheet Log (Target vs Gen Time)")
 
         submit_btn.click(
-            fn=process_edge_srt, 
+            fn=process_edge_srt,
             inputs=[
                 srt_input, current_voice,
                 export_format_srt, export_bitrate_srt, export_hz_srt
-            ], 
+            ],
             outputs=[audio_out, file_out, status_out, log_srt_grid]
         )
 
